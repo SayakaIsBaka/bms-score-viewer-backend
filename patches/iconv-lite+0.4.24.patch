@@ -1,0 +1,13 @@
+diff --git a/node_modules/iconv-lite/encodings/internal.js b/node_modules/iconv-lite/encodings/internal.js
+index 05ce38b..c9d10f3 100644
+--- a/node_modules/iconv-lite/encodings/internal.js
++++ b/node_modules/iconv-lite/encodings/internal.js
+@@ -46,7 +46,7 @@ InternalCodec.prototype.decoder = InternalDecoder;
+ //------------------------------------------------------------------------------
+ 
+ // We use node.js internal decoder. Its signature is the same as ours.
+-var StringDecoder = require('string_decoder').StringDecoder;
++import { StringDecoder } from 'node:string_decoder';
+ 
+ if (!StringDecoder.prototype.end) // Node v0.8 doesn't have this method.
+     StringDecoder.prototype.end = function() {};

@@ -1,0 +1,48 @@
+diff --git a/node_modules/bemuse-chardet/encoding/iso2022.js b/node_modules/bemuse-chardet/encoding/iso2022.js
+index afff88a..18c8180 100644
+--- a/node_modules/bemuse-chardet/encoding/iso2022.js
++++ b/node_modules/bemuse-chardet/encoding/iso2022.js
+@@ -1,5 +1,5 @@
+-var util = require('util'),
+-  Match = require ('../match');
++import util from 'node:util'
++var Match = require ('../match');
+ 
+ 
+ /**
+diff --git a/node_modules/bemuse-chardet/encoding/mbcs.js b/node_modules/bemuse-chardet/encoding/mbcs.js
+index 5aa1557..8c41b1f 100644
+--- a/node_modules/bemuse-chardet/encoding/mbcs.js
++++ b/node_modules/bemuse-chardet/encoding/mbcs.js
+@@ -1,5 +1,5 @@
+-var util = require('util'),
+-  Match = require ('../match');
++import util from 'node:util'
++var Match = require ('../match');
+ 
+ /**
+  * Binary search implementation (recursive)
+diff --git a/node_modules/bemuse-chardet/encoding/sbcs.js b/node_modules/bemuse-chardet/encoding/sbcs.js
+index 80d525e..accd585 100644
+--- a/node_modules/bemuse-chardet/encoding/sbcs.js
++++ b/node_modules/bemuse-chardet/encoding/sbcs.js
+@@ -1,5 +1,5 @@
+-var util = require('util'),
+-  Match = require ('../match');
++import util from 'node:util'
++var Match = require ('../match');
+ 
+ /**
+  * This class recognizes single-byte encodings. Because the encoding scheme is so
+diff --git a/node_modules/bemuse-chardet/encoding/unicode.js b/node_modules/bemuse-chardet/encoding/unicode.js
+index 93fa5ea..cf9b538 100644
+--- a/node_modules/bemuse-chardet/encoding/unicode.js
++++ b/node_modules/bemuse-chardet/encoding/unicode.js
+@@ -1,5 +1,5 @@
+-var util = require('util'),
+-  Match = require ('../match');
++import util from 'node:util'
++var Match = require ('../match');
+ 
+ /**
+  * This class matches UTF-16 and UTF-32, both big- and little-endian. The

@@ -1,0 +1,24 @@
+{
+  "name": "bms-score-viewer-backend",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "wrangler dev src/index.ts --port 80",
+    "bootstrap-db-dev": "wrangler d1 execute prod-d1-bms-score-viewer --local --file=./src/schemas/schema.sql",
+    "bootstrap-db-prod": "wrangler d1 execute prod-d1-bms-score-viewer --remote --file=./src/schemas/schema.sql",
+    "deploy": "wrangler deploy --minify src/index.ts",
+    "postinstall": "patch-package"
+  },
+  "author": "Sayaka",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bms": "^51.0.0",
+    "hono": "^4.2.3",
+    "patch-package": "^8.0.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240403.0",
+    "@types/encoding-japanese": "^2.0.5",
+    "wrangler": "^3.47.0"
+  }
+}

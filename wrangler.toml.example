@@ -1,0 +1,15 @@
+name = "bms-score-viewer-backend"
+compatibility_date = "2023-12-01"
+compatibility_flags = [ "nodejs_compat" ]
+
+account_id = "YOUR_ACCOUNT_ID"
+workers_dev = true
+
+[[r2_buckets]]
+binding = "SCORE_BUCKET"
+bucket_name = "your-bucket-name"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "your-db-name"
+database_id = "YOUR_DB_ID"

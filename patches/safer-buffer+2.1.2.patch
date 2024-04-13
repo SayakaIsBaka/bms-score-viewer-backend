@@ -1,0 +1,14 @@
+diff --git a/node_modules/safer-buffer/safer.js b/node_modules/safer-buffer/safer.js
+index 37c7e1a..3a48b00 100644
+--- a/node_modules/safer-buffer/safer.js
++++ b/node_modules/safer-buffer/safer.js
+@@ -2,8 +2,7 @@
+ 
+ 'use strict'
+ 
+-var buffer = require('buffer')
+-var Buffer = buffer.Buffer
++import buffer, { Buffer } from 'node:buffer'
+ 
+ var safer = {}
+ 
