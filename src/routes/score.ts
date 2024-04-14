@@ -33,7 +33,7 @@ app.get('/get', cache({
             .bind(md5)
             .first();
         if (!result)
-            return c.json({ "status": "Not found" });
+            return c.json({ "status": "Not found" }, 404);
         const object = await c.env.SCORE_BUCKET.get(md5);
         if (!object)
             return c.json({ "status": "Not found" }, 404);
