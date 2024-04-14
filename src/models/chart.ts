@@ -52,7 +52,9 @@ export class Chart {
 
     private getNotes(chart: BMSChart, objects: BMSObject[]): number {
         const lnobj = chart.headers.get("lnobj");
-        const lntype = chart.headers.get("lntype");
+        let lntype = chart.headers.get("lntype");
+        if (lnobj === undefined && lntype === undefined)
+            lntype = "1"
         return Math.floor(objects.filter(x => x.channel.match(/^[12][1-9]$/) && x.value !== lnobj).length + objects.filter(x => lntype === "1" && x.channel.match(/^[56][1-9]$/)).length / 2);
     }
 
