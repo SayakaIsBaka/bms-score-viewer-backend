@@ -36,7 +36,7 @@ export class Chart {
         const player = chart.headers.get("player");
         if (player === "1") { // SP
             return objects.filter(x => x.channel.toLowerCase().match(/[135d][8-9]/)).length > 0 ? 7 : 5;
-        } else if (player === "3" || player === "2") { // DP / Couple
+        } else if (player === "3" || player === "2" || player === "4") { // DP / Couple / Battle
             return objects.filter(x => x.channel.toLowerCase().match(/[1-6de][8-9]/)).length > 0 ? 14 : 10;
         } else {
             return 7;
