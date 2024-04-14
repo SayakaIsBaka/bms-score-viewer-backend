@@ -26,11 +26,18 @@ app.get('/get', cache({
     if (md5.length !== 32 || !md5regex.test(md5))
         return c.json({ "status": "Invalid request" }, 400);
     else {
+        const result = await c.env.DB.prepare(
+            "SELECT keys FROM Charts WHERE md5 = ?"
+          )
+            .bind(md5)
+            .first();
+        if (!result)
+            return c.json({ "status": "Not found" });
         const object = await c.env.SCORE_BUCKET.get(md5);
         if (!object)
             return c.json({ "status": "Not found" }, 404);
         c.header("Etag", object.httpEtag);
-        return c.json({ "data": encodeBase64(await object.arrayBuffer()) });
+        return c.json({ "keys": result["keys"], "data": encodeBase64(await object.arrayBuffer()) });
     }
 });
 
