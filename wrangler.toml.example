@@ -6,7 +6,7 @@ account_id = "YOUR_ACCOUNT_ID"
 workers_dev = true
 
 [limits]
-cpu_ms = 100
+cpu_ms = 500
 
 [[r2_buckets]]
 binding = "SCORE_BUCKET"

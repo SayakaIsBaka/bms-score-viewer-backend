@@ -2,7 +2,8 @@ import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit'
 import { validator } from 'hono/validator'
 import { md5 } from 'hono/utils/crypto';
-import { Reader, Compiler } from 'bms';
+import { Reader } from 'bms';
+import { compile } from '../utils/bmscompiler';
 import { ensureBmsFile } from '../utils/bmsutils';
 import { Chart } from '../models/chart';
 import { Buffer } from 'node:buffer';
@@ -73,7 +74,7 @@ app.post('/register', bodyLimit({
             const file = body["file"] as File;
             const fileArr = await file.arrayBuffer();
             let bmsStr = Reader.read(Buffer.from(fileArr), {forceEncoding: "SJIS"});
-            let chart = Compiler.compile(bmsStr);
+            let chart = compile(bmsStr);
             if (chart.headerSentences === 0 && chart.channelSentences === 0) // Not a BMS file
                 return c.json({ "status": "Uploaded file is not a BMS" }, 400);
             let computedMd5 = await md5(fileArr);
