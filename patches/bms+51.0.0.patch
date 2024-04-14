@@ -1,0 +1,14 @@
+diff --git a/node_modules/bms/src/compiler/index.ts b/node_modules/bms/src/compiler/index.ts
+index f8a8725..9659792 100644
+--- a/node_modules/bms/src/compiler/index.ts
++++ b/node_modules/bms/src/compiler/index.ts
+@@ -115,7 +115,8 @@ export function compile(text: string, options?: Partial<BMSCompileOptions>) {
+     if (items === 0) return
+     for (let i = 0; i < items; i++) {
+       const value = string.substr(i * 2, 2)
+-      const fraction = i / items
++      //const fraction = i / items
++      const fraction = 0 // Not used so hardcoding a value to improve performance
+       if (value === '00') continue
+       chart.objects.add({
+         measure: measure,

@@ -55,7 +55,7 @@ export class Chart {
         const objects = chart.objects.all();
         const lnobj = chart.headers.get("lnobj");
         const lntype = chart.headers.get("lntype");
-        return objects.filter(x => x.channel.match(/[12][1-9]/) && x.value !== lnobj).length + objects.filter(x => lntype === "1" && x.channel.match(/[56][1-9]/)).length / 2;
+        return objects.filter(x => x.channel.match(/^[12][1-9]$/) && x.value !== lnobj).length + objects.filter(x => lntype === "1" && x.channel.match(/^[56][1-9]$/)).length / 2;
     }
 
     constructor(chart: BMSChart, md5: string, filename: string) {
