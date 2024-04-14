@@ -1,4 +1,4 @@
-import { BMSChart } from "bms";
+import { BMSChart, BMSObject } from "bms";
 
 export class Chart {
     title: string;
@@ -30,11 +30,10 @@ export class Chart {
         return artist + " " + subartist;
     }
 
-    private getKeys(chart: BMSChart, filename: string): number {
+    private getKeys(chart: BMSChart, objects: BMSObject[], filename: string): number {
         if (filename.toLowerCase().endsWith(".pms"))
             return 9;
         const player = chart.headers.get("player");
-        const objects = chart.objects.all();
         if (player === "1") { // SP
             return objects.filter(x => x.channel.toLowerCase().match(/[135d][8-9]/)).length > 0 ? 7 : 5;
         } else if (player === "3") { // DP
@@ -51,19 +50,19 @@ export class Chart {
         return parseFloat(bpm);
     }
 
-    private getNotes(chart: BMSChart): number {
-        const objects = chart.objects.all();
+    private getNotes(chart: BMSChart, objects: BMSObject[]): number {
         const lnobj = chart.headers.get("lnobj");
         const lntype = chart.headers.get("lntype");
         return objects.filter(x => x.channel.match(/^[12][1-9]$/) && x.value !== lnobj).length + objects.filter(x => lntype === "1" && x.channel.match(/^[56][1-9]$/)).length / 2;
     }
 
-    constructor(chart: BMSChart, md5: string, filename: string) {
+    constructor(chart: BMSChart, objectMap: Map<string, BMSObject>, md5: string, filename: string) {
+        const objects = Array.from(objectMap.values());
         this.title = this.getTitle(chart);
         this.artist = this.getArtist(chart);
-        this.keys = this.getKeys(chart, filename);
+        this.keys = this.getKeys(chart, objects, filename);
         this.bpm = this.getBPM(chart);
-        this.notes = this.getNotes(chart);
+        this.notes = this.getNotes(chart, objects);
         this.date = new Date();
         this.md5 = md5;
         this.filename = filename;

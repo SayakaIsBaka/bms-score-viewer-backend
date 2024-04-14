@@ -36,6 +36,7 @@ export function compile(text: string, options?: Partial<BMSCompileOptions>) {
   options = options || {}
 
   const chart = new BMSChart()
+  const objectSet = new Map();
 
   const rng =
     options.rng ||
@@ -54,6 +55,7 @@ export function compile(text: string, options?: Partial<BMSCompileOptions>) {
     controlSentences: 0,
     skippedSentences: 0,
     malformedSentences: 0,
+    objectMap: objectSet,
 
     /**
      * The resulting chart
@@ -117,16 +119,22 @@ export function compile(text: string, options?: Partial<BMSCompileOptions>) {
     if (items === 0) return
     for (let i = 0; i < items; i++) {
       const value = string.substr(i * 2, 2)
-      //const fraction = i / items
-      const fraction = 0 // Not used so hardcoding a value to improve performance
+      const fraction = i / items
       if (value === '00') continue
-      chart.objects.add({
+      objectSet.set(measure + fraction + channel, {
         measure: measure,
         fraction: fraction,
         value: value,
         channel: channel,
         lineNumber: lineNumber,
       } as BMSObject)
+      /*chart.objects.add({
+        measure: measure,
+        fraction: fraction,
+        value: value,
+        channel: channel,
+        lineNumber: lineNumber,
+      } as BMSObject)*/
     }
   }
 

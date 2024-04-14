@@ -80,7 +80,7 @@ app.post('/register', bodyLimit({
             let computedMd5 = await md5(fileArr);
             if (!computedMd5)
                 return c.json({ "status": "Internal error" }, 500);
-            const chartObj = new Chart(chart.chart, computedMd5, file.name);
+            const chartObj = new Chart(chart.chart, chart.objectMap, computedMd5, file.name);
 
             // Upload chart to R2
             await c.env.SCORE_BUCKET.put(computedMd5, fileArr);
@@ -103,7 +103,7 @@ app.get('/query', cache({
     cacheName: 'bms-score-viewer-query',
     cacheControl: 'max-age=3600',
   }), async (c) => {
-    let query = c.env.DB.prepare("SELECT * FROM Charts ORDER BY date DESC LIMIT 100");
+    let query = c.env.DB.prepare("SELECT * FROM Charts ORDER BY date DESC");
     if (c.req.query("q") !== undefined && c.req.query("q")?.length !== 0) {
         query = c.env.DB.prepare("SELECT * FROM Charts WHERE title LIKE ?1 OR artist LIKE ?1 ORDER BY date DESC LIMIT 100").bind("%" + c.req.query("q") + "%");
     }
