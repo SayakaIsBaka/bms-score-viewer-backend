@@ -36,7 +36,7 @@ export class Chart {
         const player = chart.headers.get("player");
         if (player === "1") { // SP
             return objects.filter(x => x.channel.toLowerCase().match(/[135d][8-9]/)).length > 0 ? 7 : 5;
-        } else if (player === "3") { // DP
+        } else if (player === "3" || player === "2") { // DP / Couple
             return objects.filter(x => x.channel.toLowerCase().match(/[1-6de][8-9]/)).length > 0 ? 14 : 10;
         } else {
             return 7;
@@ -53,7 +53,7 @@ export class Chart {
     private getNotes(chart: BMSChart, objects: BMSObject[]): number {
         const lnobj = chart.headers.get("lnobj");
         const lntype = chart.headers.get("lntype");
-        return objects.filter(x => x.channel.match(/^[12][1-9]$/) && x.value !== lnobj).length + objects.filter(x => lntype === "1" && x.channel.match(/^[56][1-9]$/)).length / 2;
+        return Math.floor(objects.filter(x => x.channel.match(/^[12][1-9]$/) && x.value !== lnobj).length + objects.filter(x => lntype === "1" && x.channel.match(/^[56][1-9]$/)).length / 2);
     }
 
     constructor(chart: BMSChart, objectMap: Map<string, BMSObject>, md5: string, filename: string) {
