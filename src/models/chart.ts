@@ -11,23 +11,23 @@ export class Chart {
     filename: string;
 
     private getTitle(chart: BMSChart): string {
-        const title = chart.headers.get("title");
+        let title = chart.headers.get("title");
         if (title === undefined)
-            return "";
+            title = "";
         const subtitle = chart.headers.get("subtitle");
         if (subtitle === undefined)
             return title;
-        return title + " " + subtitle;
+        return title + (title && subtitle ? " ": "") + subtitle;
     }
 
     private getArtist(chart: BMSChart): string {
-        const artist = chart.headers.get("artist");
+        let artist = chart.headers.get("artist");
         if (artist === undefined)
-            return "";
+            artist = "";
         const subartist = chart.headers.get("subartist");
         if (subartist === undefined)
             return artist;
-        return artist + " " + subartist;
+        return artist + (artist && subartist ? " ": "") + subartist;
     }
 
     private getKeys(chart: BMSChart, objects: BMSObject[], filename: string): number {
