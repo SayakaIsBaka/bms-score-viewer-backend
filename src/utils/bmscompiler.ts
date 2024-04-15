@@ -100,7 +100,7 @@ export function compile(text: string, options?: Partial<BMSCompileOptions>) {
       })
       .when(matcher.header, function (m: RegExpMatchArray) {
         result.headerSentences += 1
-        if (!skipped) chart.headers.set(m[1], m[2])
+        if (!skipped && m[2] !== undefined) chart.headers.set(m[1], m[2])
       })
       .else(function () {
         warn(lineNumber, 'Invalid command')
