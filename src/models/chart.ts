@@ -33,14 +33,33 @@ export class Chart {
     private getKeys(chart: BMSChart, objects: BMSObject[], filename: string): number {
         if (filename.toLowerCase().endsWith(".pms"))
             return 9;
-        const player = chart.headers.get("player");
-        if (player === "1") { // SP
-            return objects.filter(x => x.channel.toLowerCase().match(/[135d][8-9]/)).length > 0 ? 7 : 5;
-        } else if (player === "3" || player === "2" || player === "4") { // DP / Couple / Battle
-            return objects.filter(x => x.channel.toLowerCase().match(/[1-6de][8-9]/)).length > 0 ? 14 : 10;
-        } else {
-            return 7;
+
+        let sp5 = false;
+        let sp7 = false;
+        let dp10 = false;
+        let dp14 = false;
+
+        for (const x of objects) {
+            let channel = x.channel.toLowerCase();
+            if (channel.match(/[246e][8-9]/))
+                dp14 = true;
+            else if (channel.match(/[246e][1-7]/))
+                dp10 = true;
+            else if (channel.match(/[135d][8-9]/))
+                sp7 = true;
+            else if (channel.match(/[135d][1-7]/))
+                sp5 = true;
         }
+
+        if (dp14 || (sp7 && dp10))
+            return 14;
+        else if (dp10)
+            return 10;
+        else if (sp7)
+            return 7;
+        else if (sp5)
+            return 5;
+        return 7;
     }
 
     private getBPM(chart: BMSChart): number {
