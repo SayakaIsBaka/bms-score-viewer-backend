@@ -51,12 +51,13 @@ app.get('/status', async (c) => {
     if (md5.length !== 32 || !md5regex.test(md5))
         return c.json({ "status": "Invalid request" }, 400);
     else {
-        const { results } = await c.env.DB.prepare(
-            "SELECT * FROM Charts WHERE md5 = ?"
+        const result = await c.env.DB.prepare(
+            "SELECT is_private FROM Charts WHERE md5 = ?"
           )
             .bind(md5)
-            .all();
-        return c.json({ "status": results.length > 0 ? "OK" : "Not found" });
+            .first();
+        const isPrivate = result && result["is_private"] !== 0;
+        return c.json({ "status": result ? "OK" : "Not found", "private": isPrivate });
     }
 });
 
@@ -80,6 +81,7 @@ app.post('/register', bodyLimit({
             let computedMd5 = await md5(fileArr);
             if (!computedMd5)
                 return c.json({ "status": "Internal error" }, 500);
+            const isPrivate = c.req.query("private") !== undefined;
             const chartObj = new Chart(chart.chart, chart.objectMap, computedMd5, file.name);
 
             // Upload chart to R2
@@ -88,8 +90,8 @@ app.post('/register', bodyLimit({
             // Add chartObj to DB
             try {
                 await c.env.DB.prepare(
-                    "INSERT INTO Charts (md5, title, artist, keys, bpm, notes, date, filename) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)"
-                ).bind(chartObj.md5, chartObj.title, chartObj.artist, chartObj.keys, chartObj.bpm, chartObj.notes, chartObj.date.getTime(), chartObj.filename).run();
+                    "INSERT INTO Charts (md5, title, artist, keys, bpm, notes, date, filename, is_private) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)"
+                ).bind(chartObj.md5, chartObj.title, chartObj.artist, chartObj.keys, chartObj.bpm, chartObj.notes, chartObj.date.getTime(), chartObj.filename, isPrivate).run();
             } catch (e) {
                 return c.json({ "status": "Chart already in database" }, 400);
             }
@@ -103,9 +105,9 @@ app.get('/query', cache({
     cacheName: 'bms-score-viewer-query',
     cacheControl: 'max-age=3600',
   }), async (c) => {
-    let query = c.env.DB.prepare("SELECT * FROM Charts ORDER BY date DESC");
+    let query = c.env.DB.prepare("SELECT md5, title, artist, keys, bpm, notes, date FROM Charts WHERE is_private = 0 ORDER BY date DESC");
     if (c.req.query("q") !== undefined && c.req.query("q")?.length !== 0) {
-        query = c.env.DB.prepare("SELECT * FROM Charts WHERE title LIKE ?1 OR artist LIKE ?1 ORDER BY date DESC LIMIT 100").bind("%" + c.req.query("q") + "%");
+        query = c.env.DB.prepare("SELECT md5, title, artist, keys, bpm, notes, date FROM Charts WHERE is_private = 0 AND (title LIKE ?1 OR artist LIKE ?1) ORDER BY date DESC LIMIT 100").bind("%" + c.req.query("q") + "%");
     }
     const { results } = await query.all();
     return c.json(results);
