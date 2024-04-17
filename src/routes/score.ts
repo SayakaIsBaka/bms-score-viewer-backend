@@ -84,6 +84,25 @@ app.post('/register', bodyLimit({
             const isPrivate = c.req.query("private") !== undefined;
             const chartObj = new Chart(chart.chart, chart.objectMap, computedMd5, file.name);
 
+            const result = await c.env.DB.prepare(
+                "SELECT is_private FROM Charts WHERE md5 = ?"
+              )
+                .bind(computedMd5)
+                .first();
+            const currentStatus = result && result["is_private"] !== 0;
+            if (currentStatus !== null) {
+                if (currentStatus === isPrivate)
+                    return c.json({ "status": "Chart already in database" }, 400);
+                try {
+                    await c.env.DB.prepare(
+                        "UPDATE Charts SET is_private = ?1 WHERE md5 = ?2"
+                    ).bind(isPrivate, chartObj.md5).run(); // Update visibility if different from the current one
+                } catch (e) {
+                    return c.json({ "status": "Internal error" }, 500); // Not supposed to happen
+                }
+                return c.json({ "status": "OK", "md5": computedMd5 });
+            }
+
             // Upload chart to R2
             await c.env.SCORE_BUCKET.put(computedMd5, fileArr);
 
